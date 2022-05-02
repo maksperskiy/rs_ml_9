@@ -3,9 +3,12 @@ name = "9_evaluation_selection"
 version = "0.1.0"
 description = ""
 authors = ["Maksperskiy <maksukay@mail.ru>"]
+packages = [
+    { include = "src" }
+]
 
 [tool.poetry.dependencies]
-python = "~3.10"
+python = "~3.9"
 click = "^8.1.3"
 pandas = "^1.4.2"
 numpy = "^1.22.3"
@@ -16,10 +19,12 @@ mlflow = "^1.25.1"
 
 [tool.poetry.dev-dependencies]
 black = "^22.3.0"
+pytest = "^7.1.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-train = "forest_cover_ml.train:train"
+train_log = "src.forest_cover_ml.train_log:train"
+train_rf = "src.forest_cover_ml.train_rf:train"
