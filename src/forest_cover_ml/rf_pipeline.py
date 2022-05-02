@@ -1,14 +1,16 @@
-from sklearn import feature_selection
-from sklearn import pipeline
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.feature_selection import SelectFromModel
 from sklearn.svm import LinearSVC
+import enum
 
+class Criterion(str, enum.Enum):
+    GINI="gini"
+    ENTROPY="entropy"
 
 def create_pipeline(
-    use_scaler: bool, feature_selection: bool, max_iter: int, logreg_C: float, random_state: int
+    use_scaler: bool, feature_selection: bool, n_estimators: int, criterion: Criterion, random_state: int
 ) -> Pipeline:
     pipeline_steps = []
 
@@ -29,8 +31,10 @@ def create_pipeline(
     pipeline_steps.append(
         (
             "classifier",
-            LogisticRegression(
-                random_state=random_state, max_iter=max_iter, C=logreg_C
+            RandomForestClassifier(
+                n_estimators=n_estimators,
+                criterion=criterion,
+                random_state=random_state
             ),
         )
     )
