@@ -19,7 +19,8 @@ def create_pipeline(
                 'feature_selection',
                 SelectFromModel(
                     LinearSVC(
-                        penalty="l1"
+                        random_state=random_state, 
+                        penalty="l2"
                     )
                 )
             ))

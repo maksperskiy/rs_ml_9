@@ -4,7 +4,7 @@ from joblib import dump
 import click
 import mlflow
 import mlflow.sklearn
-from sklearn.metrics import accuracy_score, recall_score, roc_auc_score
+from sklearn.metrics import accuracy_score, f1_score, recall_score, roc_auc_score
 
 from .data import get_dataset
 from .log_pipeline import create_pipeline
@@ -14,14 +14,14 @@ from .log_pipeline import create_pipeline
 @click.option(
     "-d",
     "--dataset-path",
-    default="data/heart.csv",
+    default="src/forest_cover_ml/data/train.csv",
     type=click.Path(exists=True, dir_okay=False, path_type=Path),
     show_default=True,
 )
 @click.option(
     "-s",
     "--save-model-path",
-    default="data/model.joblib",
+    default="src/forest_cover_ml/models/model.joblib",
     type=click.Path(dir_okay=False, writable=True, path_type=Path),
     show_default=True,
 )
@@ -44,8 +44,8 @@ from .log_pipeline import create_pipeline
     show_default=True,
 )
 @click.option(
-    "--use-feature_selection",
-    default=True,
+    "--feature_selection",
+    default=False,
     type=bool,
     show_default=True,
 )
@@ -61,7 +61,7 @@ from .log_pipeline import create_pipeline
     type=float,
     show_default=True,
 )
-def train_lr(
+def train(
     dataset_path: Path,
     save_model_path: Path,
     random_state: int,
@@ -81,13 +81,19 @@ def train_lr(
             use_scaler=use_scaler, 
             feature_selection=feature_selection,
             max_iter=max_iter, 
-            logreg_c=logreg_c, 
+            logreg_C=logreg_c, 
             random_state=random_state
             )
+
         pipeline.fit(features_train, target_train)
-        accuracy = accuracy_score(target_val, pipeline.predict(features_val))
-        roc_auc = roc_auc_score(target_val, pipeline.predict(features_val))
-        recall = recall_score(target_val, pipeline.predict(features_val))
+
+        preds = pipeline.predict(features_val)
+        preds_proba = pipeline.predict_proba(features_val)
+
+        accuracy = accuracy_score(target_val, preds)
+        roc_auc = roc_auc_score(target_val, preds_proba, multi_class='ovr')
+        recall = recall_score(target_val, preds, average="macro")
+        
         mlflow.log_param("use_scaler", use_scaler)
         mlflow.log_param("max_iter", max_iter)
         mlflow.log_param("logreg_c", logreg_c)
