@@ -5,12 +5,13 @@ from sklearn.feature_selection import SelectFromModel
 from sklearn.svm import LinearSVC
 import enum
 
-class Criterion(str, enum.Enum):
-    GINI="gini"
-    ENTROPY="entropy"
+CRITERION = [
+    "gini",
+    "entropy"
+]
 
 def create_pipeline(
-    use_scaler: bool, feature_selection: bool, n_estimators: int, criterion: Criterion, random_state: int
+    use_scaler: bool, feature_selection: bool, n_estimators: int, criterion: str, random_state: int
 ) -> Pipeline:
     pipeline_steps = []
 
@@ -23,7 +24,8 @@ def create_pipeline(
                 'feature_selection',
                 SelectFromModel(
                     LinearSVC(
-                        penalty="l1"
+                        random_state=random_state, 
+                        penalty="l2"
                     )
                 )
             ))
