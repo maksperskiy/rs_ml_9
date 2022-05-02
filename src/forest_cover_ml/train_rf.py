@@ -4,10 +4,10 @@ from joblib import dump
 import click
 import mlflow
 import mlflow.sklearn
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, recall_score, roc_auc_score
 
 from .data import get_dataset
-from .pipeline import create_pipeline
+from .log_pipeline import create_pipeline
 
 
 @click.command()
@@ -61,7 +61,7 @@ from .pipeline import create_pipeline
     type=float,
     show_default=True,
 )
-def train(
+def train_lr(
     dataset_path: Path,
     save_model_path: Path,
     random_state: int,
@@ -86,10 +86,19 @@ def train(
             )
         pipeline.fit(features_train, target_train)
         accuracy = accuracy_score(target_val, pipeline.predict(features_val))
+        roc_auc = roc_auc_score(target_val, pipeline.predict(features_val))
+        recall = recall_score(target_val, pipeline.predict(features_val))
         mlflow.log_param("use_scaler", use_scaler)
         mlflow.log_param("max_iter", max_iter)
         mlflow.log_param("logreg_c", logreg_c)
         mlflow.log_metric("accuracy", accuracy)
+        mlflow.log_metric("roc_auc", roc_auc)
+        mlflow.log_metric("recall", recall)
+
         click.echo(f"Accuracy: {accuracy}.")
+        click.echo(f"roc_auc: {roc_auc}.")
+        click.echo(f"recall: {recall}.")
+
         dump(pipeline, save_model_path)
+
         click.echo(f"Model is saved to {save_model_path}.")
