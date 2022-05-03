@@ -1,16 +1,13 @@
-from operator import imod
 from pathlib import Path
 from joblib import dump
 import numpy as np
-import pandas as pd
 
 import click
 import mlflow
 import mlflow.sklearn
-from sklearn.metrics import accuracy_score, make_scorer, recall_score, roc_auc_score
-from sklearn.model_selection import cross_val_score, cross_validate
+from sklearn.model_selection import cross_validate
 
-from .data import get_X_y, get_dataset
+from .data import get_X_y
 from .rf_pipeline import create_pipeline, CRITERION
 
 

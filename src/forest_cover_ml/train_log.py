@@ -5,10 +5,9 @@ import click
 import mlflow
 import mlflow.sklearn
 import numpy as np
-from sklearn.metrics import accuracy_score, f1_score, recall_score, roc_auc_score
 from sklearn.model_selection import cross_validate
 
-from .data import get_dataset, get_X_y
+from .data import get_X_y
 from .log_pipeline import create_pipeline
 
 
