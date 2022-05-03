@@ -93,12 +93,12 @@ def train(
     )
     with mlflow.start_run(run_name="rf_model"):
         pipeline = create_pipeline(
-            use_scaler=use_scaler, 
+            use_scaler=use_scaler,
             feature_selection=feature_selection,
-            n_estimators=n_estimators, 
-            criterion=criterion, 
+            n_estimators=n_estimators,
+            criterion=criterion,
             random_state=random_state
-            )
+        )
 
         scoring = [
             'accuracy',
@@ -106,17 +106,18 @@ def train(
             'roc_auc_ovr'
         ]
 
-        scores = cross_validate(pipeline, X, y, scoring=scoring, cv=folds, return_train_score=False)
+        scores = cross_validate(
+            pipeline, X, y, scoring=scoring, cv=folds, return_train_score=False)
 
         mlflow.log_param("use_scaler", use_scaler)
         mlflow.log_param("n_estimators", n_estimators)
         mlflow.log_param("criterion", criterion)
 
         for name in scores.keys():
-            print ('%s: %.4f' % (name, np.average(scores[name])))
+            print('%s: %.4f' % (name, np.average(scores[name])))
             mlflow.log_metric(name, np.average(scores[name]))
             click.echo(f"{name}: {np.average(scores[name])}.")
-        
+
         dump(pipeline, save_model_path)
 
         click.echo(f"Model is saved to {save_model_path}.")
