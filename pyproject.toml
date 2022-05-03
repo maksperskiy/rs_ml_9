@@ -4,7 +4,8 @@ version = "0.1.0"
 description = ""
 authors = ["Maksperskiy <maksukay@mail.ru>"]
 packages = [
-    { include = "src" }
+    { include = "src" },
+    { include = "tests" },
 ]
 
 [tool.poetry.dependencies]
