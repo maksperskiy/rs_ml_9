@@ -38,3 +38,16 @@ poetry run pytest
 poetry run black
 poetry run mypy
 ```
+
+## Pytest not passed in github action because there are no dataset
+
+# Using this code and spending experiments I've got following results:
+![MLFLOW resuls](/mlflow_results.png)
+# And I've got next model:
+* classifier - Random forest
+* n_estimators - 500
+* criterion - entropy
+* uning standart scaler
+* uning feature selection (LinearSVC, l2 penalty)
+* evaluated on 5 K-fold CV
+## **Accuracy_score - 0.757 on cv_score**
