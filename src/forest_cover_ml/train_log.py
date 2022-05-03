@@ -73,34 +73,28 @@ def train(
     max_iter: int,
     logreg_c: float,
 ) -> None:
-    X, y = get_X_y(
-        train_dataset_path,
-        random_state
-    )
+    X, y = get_X_y(train_dataset_path, random_state)
     with mlflow.start_run(run_name="log_model"):
         pipeline = create_pipeline(
-            use_scaler=use_scaler, 
+            use_scaler=use_scaler,
             feature_selection=feature_selection,
-            max_iter=max_iter, 
-            logreg_C=logreg_c, 
-            random_state=random_state
-            )
+            max_iter=max_iter,
+            logreg_C=logreg_c,
+            random_state=random_state,
+        )
 
-        scoring = [
-            'accuracy',
-            'recall_macro',
-            'roc_auc_ovr'
-        ]
+        scoring = ["accuracy", "recall_macro", "roc_auc_ovr"]
 
         scores = cross_validate(
-            pipeline, X, y, scoring=scoring, cv=folds, return_train_score=False)
+            pipeline, X, y, scoring=scoring, cv=folds, return_train_score=False
+        )
 
         mlflow.log_param("use_scaler", use_scaler)
         mlflow.log_param("max_iter", max_iter)
         mlflow.log_param("logreg_c", logreg_c)
 
         for name in scores.keys():
-            print('%s: %.4f' % (name, np.average(scores[name])))
+            print("%s: %.4f" % (name, np.average(scores[name])))
             mlflow.log_metric(name, np.average(scores[name]))
             click.echo(f"{name}: {np.average(scores[name])}.")
 

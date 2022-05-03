@@ -6,7 +6,11 @@ from sklearn.svm import LinearSVC
 
 
 def create_pipeline(
-    use_scaler: bool, feature_selection: bool, max_iter: int, logreg_C: float, random_state: int
+    use_scaler: bool,
+    feature_selection: bool,
+    max_iter: int,
+    logreg_C: float,
+    random_state: int,
 ) -> Pipeline:
     pipeline_steps = []
 
@@ -16,14 +20,10 @@ def create_pipeline(
     if feature_selection:
         pipeline_steps.append(
             (
-                'feature_selection',
-                SelectFromModel(
-                    LinearSVC(
-                        random_state=random_state, 
-                        penalty="l2"
-                    )
-                )
-            ))
+                "feature_selection",
+                SelectFromModel(LinearSVC(random_state=random_state, penalty="l2")),
+            )
+        )
 
     pipeline_steps.append(
         (

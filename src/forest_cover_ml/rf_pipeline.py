@@ -5,13 +5,15 @@ from sklearn.feature_selection import SelectFromModel
 from sklearn.svm import LinearSVC
 import enum
 
-CRITERION = [
-    "gini",
-    "entropy"
-]
+CRITERION = ["gini", "entropy"]
+
 
 def create_pipeline(
-    use_scaler: bool, feature_selection: bool, n_estimators: int, criterion: str, random_state: int
+    use_scaler: bool,
+    feature_selection: bool,
+    n_estimators: int,
+    criterion: str,
+    random_state: int,
 ) -> Pipeline:
     pipeline_steps = []
 
@@ -21,14 +23,10 @@ def create_pipeline(
     if feature_selection:
         pipeline_steps.append(
             (
-                'feature_selection',
-                SelectFromModel(
-                    LinearSVC(
-                        random_state=random_state, 
-                        penalty="l2"
-                    )
-                )
-            ))
+                "feature_selection",
+                SelectFromModel(LinearSVC(random_state=random_state, penalty="l2")),
+            )
+        )
 
     pipeline_steps.append(
         (
@@ -36,7 +34,7 @@ def create_pipeline(
             RandomForestClassifier(
                 n_estimators=n_estimators,
                 criterion=criterion,
-                random_state=random_state
+                random_state=random_state,
             ),
         )
     )

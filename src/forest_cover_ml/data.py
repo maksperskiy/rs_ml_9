@@ -19,9 +19,8 @@ def get_dataset(
     )
     return features_train, features_val, target_train, target_val
 
-def get_X_y(
-    csv_path: Path, random_state: int
-) -> Tuple[pd.DataFrame, pd.Series]:
+
+def get_X_y(csv_path: Path, random_state: int) -> Tuple[pd.DataFrame, pd.Series]:
     dataset = pd.read_csv(csv_path)
     click.echo(f"Dataset shape: {dataset.shape}.")
     features = dataset.drop("Cover_Type", axis=1)
