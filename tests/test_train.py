@@ -21,7 +21,6 @@ def test_error_for_invalid_criterion(
             "criterion",
         ],
     )
-    assert result.exit_code == 0
     assert "Bad criterion" in result.output
 
 def test_error_for_invalid_folds(
