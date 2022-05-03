@@ -21,8 +21,8 @@ def test_error_for_invalid_criterion(
             "criterion",
         ],
     )
-    assert result.exit_code == 2
-    assert "Invalid value" in result.output
+    assert result.exit_code == 0
+    assert "Bad criterion" in result.output
 
 def test_success_for_invalid_criterion(
     runner: CliRunner
@@ -34,32 +34,31 @@ def test_success_for_invalid_criterion(
             "gini",
         ],
     )
-    assert result.exit_code == 2
-    assert "Invalid value for '--criterion'" not in result.output
+    assert result.exit_code == 0
 
 
-def test_error_for_invalid_logreg_c(
+def test_error_for_invalid_folds(
     runner: CliRunner
 ) -> None:
     result = runner.invoke(
         train_log,
         [
-            "--logreg-c",
-            1.2,
-        ],
+            "--folds",
+            0
+        ]
     )
     assert result.exit_code == 2
-    assert "Invalid value" in result.output
+    assert "Invalid value for '--folds" in result.output
 
-def test_success_for_invalid_logreg_c(
+def test_success_for_invalid_folds(
     runner: CliRunner
 ) -> None:
     result = runner.invoke(
         train_log,
         [
-            "--logreg-c",
-            0.1,
+            "--folds",
+            2
         ],
     )
-    assert result.exit_code == 2
-    assert "Invalid value for '--logreg-c'" not in result.output
+    assert result.exit_code == 0
+    assert "Invalid value for '--folds'" not in result.output
