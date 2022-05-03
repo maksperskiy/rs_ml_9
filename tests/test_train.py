@@ -24,19 +24,6 @@ def test_error_for_invalid_criterion(
     assert result.exit_code == 0
     assert "Bad criterion" in result.output
 
-def test_success_for_invalid_criterion(
-    runner: CliRunner
-) -> None:
-    result = runner.invoke(
-        train_rf,
-        [
-            "--criterion",
-            "gini",
-        ],
-    )
-    assert result.exit_code == 0
-
-
 def test_error_for_invalid_folds(
     runner: CliRunner
 ) -> None:
@@ -49,16 +36,3 @@ def test_error_for_invalid_folds(
     )
     assert result.exit_code == 2
     assert "Invalid value for '--folds" in result.output
-
-def test_success_for_invalid_folds(
-    runner: CliRunner
-) -> None:
-    result = runner.invoke(
-        train_log,
-        [
-            "--folds",
-            2
-        ],
-    )
-    assert result.exit_code == 0
-    assert "Invalid value for '--folds'" not in result.output
