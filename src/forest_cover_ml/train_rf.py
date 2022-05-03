@@ -23,13 +23,6 @@ from .rf_pipeline import create_pipeline, CRITERION
     show_default=True,
 )
 @click.option(
-    "-d",
-    "--test-dataset-path",
-    default="data/test.csv",
-    type=click.Path(exists=True, dir_okay=False, path_type=Path),
-    show_default=True,
-)
-@click.option(
     "-s",
     "--save-model-path",
     default="models/model.joblib",
@@ -74,7 +67,6 @@ from .rf_pipeline import create_pipeline, CRITERION
 )
 def train(
     train_dataset_path: Path,
-    test_dataset_path: Path,
     save_model_path: Path,
     random_state: int,
     folds: int,
