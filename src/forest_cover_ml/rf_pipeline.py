@@ -3,7 +3,6 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.feature_selection import SelectFromModel
 from sklearn.svm import LinearSVC
-import enum
 
 CRITERION = ["gini", "entropy"]
 
