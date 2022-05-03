@@ -16,6 +16,7 @@ sklearn = "^0.0"
 scikit-learn = "^1.0.1"
 scipy = "^1.8.0"
 mlflow = "^1.25.1"
+pandas-profiling = "^3.2.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.3.0"
@@ -28,3 +29,4 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.scripts]
 train_log = "src.forest_cover_ml.train_log:train"
 train_rf = "src.forest_cover_ml.train_rf:train"
+pd_profiling = "data.pd_profiling:profile"

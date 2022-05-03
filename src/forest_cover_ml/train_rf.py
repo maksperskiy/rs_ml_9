@@ -14,14 +14,14 @@ from .rf_pipeline import create_pipeline, CRITERION
 @click.option(
     "-d",
     "--dataset-path",
-    default="src/forest_cover_ml/data/train.csv",
+    default="data/train.csv",
     type=click.Path(exists=True, dir_okay=False, path_type=Path),
     show_default=True,
 )
 @click.option(
     "-s",
     "--save-model-path",
-    default="src/forest_cover_ml/models/model.joblib",
+    default="models/model.joblib",
     type=click.Path(dir_okay=False, writable=True, path_type=Path),
     show_default=True,
 )
