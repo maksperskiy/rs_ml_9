@@ -1,5 +1,20 @@
-9_evaluation_selection homework for RS School Machine Learning course.
+# 9_evaluation_selection homework for RS School Machine Learning course.
 
+## Using this code and spending experiments I've got following results:
+![MLFLOW results](/mlflow_results.png)
+## And I've got next best model:
+* classifier - Random forest
+* n_estimators - 500
+* criterion - entropy
+* uning standart scaler
+* uning feature selection (LinearSVC, l2 penalty)
+* evaluated on 5 K-fold CV
+## **Accuracy_score - 0.757 on cv_score**
+
+# Submission on Kaggle gives next result:
+![submission results](/test_results.png)
+
+-----------------------------------------------------------------
 This work uses [Forest Cover](https://www.kaggle.com/competitions/forest-cover-type-prediction) dataset.
 
 ## Usage
@@ -23,6 +38,16 @@ poetry run train_log -d <path to csv with data> -s <path to save trained model> 
 ```sh
 poetry run mlflow ui
 ```
+### **To test data on fitted model run:**
+```sh
+poetry run test_model -d <path to csv with data> -m <path to trained model>
+```
+
+### **Also you can get pandas profing html report running:**
+```sh
+poetry run pd_profiling -d <path to csv with data> -s <path to save html file>
+```
+
 
 ## Development
 
@@ -41,13 +66,3 @@ poetry run mypy
 
 ## Pytest not passed in github action because there are no dataset
 
-# Using this code and spending experiments I've got following results:
-![MLFLOW resuls](/mlflow_results.png)
-# And I've got next model:
-* classifier - Random forest
-* n_estimators - 500
-* criterion - entropy
-* uning standart scaler
-* uning feature selection (LinearSVC, l2 penalty)
-* evaluated on 5 K-fold CV
-## **Accuracy_score - 0.757 on cv_score**
