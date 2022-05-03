@@ -19,3 +19,22 @@ poetry run train_rf -d <path to csv with data> -s <path to save trained model> -
 ```sh
 poetry run train_log -d <path to csv with data> -s <path to save trained model> --random-state <random state> --folds <number of folds in K-fold CV> --use-scaler <true/false to use scaler> --feature_selection <true/false to use feature selection> --max-iter <number of iterations> --logreg-c <logreg coef>
 ```
+6. Run MLflow UI to see the information about experiments you conducted:
+```sh
+poetry run mlflow ui
+```
+
+## Development
+
+The code in this repository must be tested, formatted with black, and pass mypy typechecking before being commited to the repository.
+
+Install all requirements (including dev requirements) to poetry environment:
+```
+poetry install
+```
+Now you can use developer instruments:
+```
+poetry run pytest
+poetry run black
+poetry run mypy
+```
