@@ -1,20 +1,31 @@
+from operator import imod
 from pathlib import Path
 from joblib import dump
+import numpy as np
+import pandas as pd
 
 import click
 import mlflow
 import mlflow.sklearn
-from sklearn.metrics import accuracy_score, recall_score, roc_auc_score, f1_score
+from sklearn.metrics import accuracy_score, make_scorer, recall_score, roc_auc_score
+from sklearn.model_selection import cross_val_score, cross_validate
 
-from .data import get_dataset
+from .data import get_X_y, get_dataset
 from .rf_pipeline import create_pipeline, CRITERION
 
 
 @click.command()
 @click.option(
     "-d",
-    "--dataset-path",
+    "--train-dataset-path",
     default="data/train.csv",
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+    show_default=True,
+)
+@click.option(
+    "-d",
+    "--test-dataset-path",
+    default="data/test.csv",
     type=click.Path(exists=True, dir_okay=False, path_type=Path),
     show_default=True,
 )
@@ -32,9 +43,9 @@ from .rf_pipeline import create_pipeline, CRITERION
     show_default=True,
 )
 @click.option(
-    "--test-split-ratio",
-    default=0.2,
-    type=click.FloatRange(0, 1, min_open=True, max_open=True),
+    "--folds",
+    default=5,
+    type=click.IntRange(1, 10, min_open=True, max_open=True),
     show_default=True,
 )
 @click.option(
@@ -62,25 +73,25 @@ from .rf_pipeline import create_pipeline, CRITERION
     show_default=True,
 )
 def train(
-    dataset_path: Path,
+    train_dataset_path: Path,
+    test_dataset_path: Path,
     save_model_path: Path,
     random_state: int,
-    test_split_ratio: float,
+    folds: int,
     use_scaler: bool,
     feature_selection: bool,
     n_estimators: int,
     criterion: str,
 ) -> None:
-    features_train, features_val, target_train, target_val = get_dataset(
-        dataset_path,
-        random_state,
-        test_split_ratio,
-    )
-    with mlflow.start_run():
-        if criterion not in CRITERION:
-            click.echo(f"Bad criterion: 'entropy' or 'gini'.")
-            return
+    if criterion not in CRITERION:
+        click.echo(f"Bad criterion: 'entropy' or 'gini'.")
+        return
 
+    X, y = get_X_y(
+        train_dataset_path,
+        random_state
+    )
+    with mlflow.start_run(run_name="rf_model"):
         pipeline = create_pipeline(
             use_scaler=use_scaler, 
             feature_selection=feature_selection,
@@ -89,26 +100,23 @@ def train(
             random_state=random_state
             )
 
-        pipeline.fit(features_train, target_train)
+        scoring = [
+            'accuracy',
+            'recall_macro',
+            'roc_auc_ovr'
+        ]
 
-        preds = pipeline.predict(features_val)
-        preds_proba = pipeline.predict_proba(features_val)
+        scores = cross_validate(pipeline, X, y, scoring=scoring, cv=folds, return_train_score=False)
 
-        accuracy = accuracy_score(target_val, preds)
-        roc_auc = roc_auc_score(target_val, preds_proba, multi_class='ovr')
-        recall = recall_score(target_val, preds, average="macro")
-        
         mlflow.log_param("use_scaler", use_scaler)
         mlflow.log_param("n_estimators", n_estimators)
         mlflow.log_param("criterion", criterion)
-        mlflow.log_metric("accuracy", accuracy)
-        mlflow.log_metric("roc_auc", roc_auc)
-        mlflow.log_metric("recall", recall)
-        
-        click.echo(f"Accuracy: {accuracy}.")
-        click.echo(f"roc_auc: {roc_auc}.")
-        click.echo(f"recall: {recall}.")
 
+        for name in scores.keys():
+            print ('%s: %.4f' % (name, np.average(scores[name])))
+            mlflow.log_metric(name, np.average(scores[name]))
+            click.echo(f"{name}: {np.average(scores[name])}.")
+        
         dump(pipeline, save_model_path)
 
         click.echo(f"Model is saved to {save_model_path}.")

@@ -18,3 +18,13 @@ def get_dataset(
         features, target, test_size=test_split_ratio, random_state=random_state
     )
     return features_train, features_val, target_train, target_val
+
+def get_X_y(
+    csv_path: Path, random_state: int
+) -> Tuple[pd.DataFrame, pd.Series]:
+    dataset = pd.read_csv(csv_path)
+    click.echo(f"Dataset shape: {dataset.shape}.")
+    features = dataset.drop("Cover_Type", axis=1)
+    target = dataset["Cover_Type"]
+
+    return features, target
