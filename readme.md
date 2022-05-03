@@ -15,3 +15,7 @@ poetry install --no-dev
 ```sh
 poetry run train_rf -d <path to csv with data> -s <path to save trained model> --random-state <random state> --folds <number of folds in K-fold CV> --use-scaler <true/false to use scaler> --feature_selection <true/false to use feature selection> --n_estimators <number of estimators of forest> --criterion <gini/entropy criterion of learning>
 ```
+5. 2. Run train_log to train logistic regression classifier with the following command:
+```sh
+poetry run train_log -d <path to csv with data> -s <path to save trained model> --random-state <random state> --folds <number of folds in K-fold CV> --use-scaler <true/false to use scaler> --feature_selection <true/false to use feature selection> --max-iter <number of iterations> --logreg-c <logreg coef>
+```
